@@ -1,4 +1,4 @@
-import { OrbitControls, Point, Points } from "@react-three/drei";
+import { OrbitControls, Points, Sphere } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useMemo, useState } from "react";
 import { generatePoints } from "./utils";
@@ -12,7 +12,12 @@ type IPoint = {
 function PointCloud({ points }: { points: IPoint[] }) {
   const mesh = useMemo(() => {
     return points.map((point, i) => (
-      <Point key={i} position={[point.x, point.y, point.z]} />
+      <Sphere
+        key={i}
+        position={[point.x, point.y, point.z]}
+        scale={0.05}
+        name={"point" + i.toString()}
+      />
     ));
   }, [points]);
 
