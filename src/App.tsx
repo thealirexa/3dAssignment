@@ -1,6 +1,6 @@
-import { OrbitControls, Points, Sphere } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { useMemo, useState } from "react";
+import { Box, OrbitControls, Points } from "@react-three/drei";
+import { Canvas, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useState } from "react";
 import { generatePoints } from "./utils";
 
 type IPoint = {
@@ -12,10 +12,10 @@ type IPoint = {
 function PointCloud({ points }: { points: IPoint[] }) {
   const mesh = useMemo(() => {
     return points.map((point, i) => (
-      <Sphere
+      <Box
         key={i}
         position={[point.x, point.y, point.z]}
-        scale={0.05}
+        scale={0.08}
         name={"point" + i.toString()}
       />
     ));
@@ -32,8 +32,18 @@ function App() {
   };
 
   const handleAddPoint = () => {
-    setPoints((prevPoints) => [...prevPoints, { x: 0, y: 0, z: 0 }]);
+    setPoints([{ x: 0, y: 0, z: 0 }]);
   };
+
+  function SetupCamera() {
+    const { camera } = useThree();
+    useEffect(() => {
+      camera.position.set(0, 0, 35);
+      camera.updateProjectionMatrix();
+    }, [camera]);
+
+    return null;
+  }
 
   return (
     <div className="h-screen bg-gray-900 flex flex-col items-center justify-center">
@@ -41,6 +51,7 @@ function App() {
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
         <PointCloud points={points} />
+        <SetupCamera />
         <OrbitControls />
       </Canvas>
       <div className="my-4 flex space-x-4">
